@@ -43,7 +43,7 @@ class Map:
         """
         self.player_type = character_type
         self.player_image = self.player_images[character_type]
-        self.player_image = pygame.transform.scale(self.player_image, (int(self.player_image.get_width() * 0.15), int(self.player_image.get_height() * 0.15)))
+        self.player_image = pygame.transform.scale(self.player_image, (int(self.player_image.get_width() * 2), int(self.player_image.get_height() * 2)))
 
     def check_for_combat(self):
         """
@@ -113,7 +113,7 @@ class Map:
             return 'quit'  # Stop processing events if game is over
 
         keys = pygame.key.get_pressed()
-        move_speed = 1
+        move_speed = 3
         if keys[pygame.K_LEFT]:
             self.player_position[0] -= move_speed
         if keys[pygame.K_RIGHT]:
