@@ -53,7 +53,7 @@ class CharacterSelect:
         max_height = self.window.get_height() // 4  # maximum button height
 
         x = total_spacing
-        y = self.window.get_height() // 3 - max_height // 2  # position them a bit higher to make space for back button
+        y = self.window.get_height() // 1.425 - max_height // 2  # position them a bit higher to make space for back button
 
         for character, image in self.characters.items():
             aspect_ratio = image.get_height() / image.get_width()
