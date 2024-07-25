@@ -14,7 +14,7 @@ class Map:
             window (pygame.Surface): The game window surface.
         """
         self.window = window
-        self.map_image = pygame.image.load(GAME_ASSETS["dungeon_map"]).convert_alpha()
+        self.map_image = pygame.image.load(GAME_ASSETS["grass_map"]).convert_alpha()
         self.map_image = pygame.transform.scale(self.map_image, (self.window.get_width(), self.window.get_height()))
         self.player_images = {
             'Warrior': pygame.image.load(GAME_ASSETS['warrior']).convert_alpha(),
@@ -61,6 +61,7 @@ class Map:
 
     def handle_combat(self):
         """
+
         Handle combat between the player and the current enemy.
         """
         if self.in_combat and self.current_enemy:
@@ -112,7 +113,7 @@ class Map:
             return 'quit'  # Stop processing events if game is over
 
         keys = pygame.key.get_pressed()
-        move_speed = 2
+        move_speed = 1
         if keys[pygame.K_LEFT]:
             self.player_position[0] -= move_speed
         if keys[pygame.K_RIGHT]:
@@ -142,3 +143,5 @@ class Map:
         if self.blue_orb:
             self.window.blit(self.blue_orb, self.orb_position)
         pygame.display.flip()
+
+
