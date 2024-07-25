@@ -35,16 +35,22 @@ class Map:
         if self.map_type == 'grass_map':
             self.enemies = [
                 Enemy(GAME_ASSETS["goblin"], [50, 50], self.window),
+                Enemy(GAME_ASSETS["goblin"], [self.window.get_width() - 120, 50], self.window)
+            ]
+        
+        elif self.map_type == 'cave_map':
+            self.enemies = [
                 Enemy(GAME_ASSETS["orc"], [self.window.get_width() - 120, 50], self.window),
                 Enemy(GAME_ASSETS["skeleton"], [50, self.window.get_height() - 120], self.window),
                 Enemy(GAME_ASSETS["skeleton"], [self.window.get_width() - 120, self.window.get_height() - 120], self.window)
             ]
-        
-        if self.map_type == 'cave_map':
-            pass
 
-        if self.map_type == 'dungeon_map':
-            pass
+        elif self.map_type == 'dungeon_map':
+            # Example enemies for dungeon, adjust as needed
+            self.enemies = [
+                Enemy(GAME_ASSETS["orc"], [self.window.get_width() / 2, self.window.get_height() / 2], self.window),
+                Enemy(GAME_ASSETS["skeleton"], [self.window.get_width() / 4, self.window.get_height() / 4], self.window)
+            ]
 
     def load_player(self, character_type):
         """
