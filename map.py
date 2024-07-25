@@ -6,15 +6,17 @@ from enemy import Enemy
 
 
 class Map:
-    def __init__(self, window):
+    def __init__(self, window, map_type):
         """
         Initialize the Map class.
 
         Args:
             window (pygame.Surface): The game window surface.
+            map_type (str): The type of map (level) to load.
         """
         self.window = window
-        self.map_image = pygame.image.load(GAME_ASSETS["grass_map"]).convert_alpha()
+        self.map_type = map_type
+        self.map_image = pygame.image.load(GAME_ASSETS[map_type]).convert_alpha()
         self.map_image = pygame.transform.scale(self.map_image, (self.window.get_width(), self.window.get_height()))
         self.player_images = {
             'Warrior': pygame.image.load(GAME_ASSETS['warrior']).convert_alpha(),
@@ -23,16 +25,26 @@ class Map:
         }
         self.player_type = None
         self.player_position = [self.window.get_width() / 2, self.window.get_height() / 2]
-        self.enemies = [
-            Enemy(GAME_ASSETS["goblin"], [50, 50], self.window),
-            Enemy(GAME_ASSETS["orc"], [self.window.get_width() - 120, 50], self.window),
-            Enemy(GAME_ASSETS["skeleton"], [50, self.window.get_height() - 120], self.window),
-            Enemy(GAME_ASSETS["skeleton"], [self.window.get_width() - 120, self.window.get_height() - 120], self.window)
-        ]
-        self.in_combat = False  # Ensure this attribute is defined in the constructor
-        self.current_enemy = None
+        self.enemies = []
         self.blue_orb = None
         self.game_over = False
+        self.in_combat = False
+        self.current_enemy = None
+
+        # Load enemies based on the level type
+        if self.map_type == 'grass_map':
+            self.enemies = [
+                Enemy(GAME_ASSETS["goblin"], [50, 50], self.window),
+                Enemy(GAME_ASSETS["orc"], [self.window.get_width() - 120, 50], self.window),
+                Enemy(GAME_ASSETS["skeleton"], [50, self.window.get_height() - 120], self.window),
+                Enemy(GAME_ASSETS["skeleton"], [self.window.get_width() - 120, self.window.get_height() - 120], self.window)
+            ]
+        
+        if self.map_type == 'cave_map':
+            pass
+
+        if self.map_type == 'dungeon_map':
+            pass
 
     def load_player(self, character_type):
         """
@@ -61,7 +73,6 @@ class Map:
 
     def handle_combat(self):
         """
-
         Handle combat between the player and the current enemy.
         """
         if self.in_combat and self.current_enemy:
@@ -83,7 +94,7 @@ class Map:
 
     def spawn_blue_orb(self):
         """
-        Spawn the blue orb in the center of the map.
+        Spawn the blue orb in the centre of the map for level transition.
         """
         self.blue_orb = pygame.image.load(GAME_ASSETS["blue_orb"]).convert_alpha()
         self.blue_orb = pygame.transform.scale(self.blue_orb, (50, 50))
@@ -94,23 +105,27 @@ class Map:
         Check if the player has collided with the blue orb.
 
         Returns:
-            bool: True if the player has collided with the blue orb, False otherwise.
+            str: 'quit' if the player has collided with the blue orb and it's the dungeon level,
+                'next_level' otherwise, or None if there is no collision.
         """
         if self.blue_orb and pygame.math.Vector2(self.orb_position).distance_to(self.player_position) < 25:
-            self.game_over = True
-            print("YOU WIN")  # This can be modified to a more visual display if needed.
-            return True
-        return False
+            if self.map_type == 'dungeon_map':
+                self.game_over = True
+                return 'quit'
+            else:
+                return 'next_level'
+        return None
+
 
     def handle_events(self):
         """
         Handle user input events.
         
         Returns:
-            str: 'quit' if the game is over and should be exited, None otherwise.
+            str: 'quit' if the game is over and should be exited, 'next_level' if level should be changed, or None otherwise.
         """
         if self.game_over:
-            return 'quit'  # Stop processing events if game is over
+            return 'quit'
 
         keys = pygame.key.get_pressed()
         move_speed = 3
@@ -128,8 +143,10 @@ class Map:
                 return
         self.handle_combat()
 
-        if self.blue_orb and self.check_orb_collision():
-            return 'quit'
+        orb_collision_result = self.check_orb_collision()
+        if orb_collision_result:
+            return orb_collision_result
+
 
     def draw(self):
         """
@@ -143,5 +160,6 @@ class Map:
         if self.blue_orb:
             self.window.blit(self.blue_orb, self.orb_position)
         pygame.display.flip()
+
 
 
