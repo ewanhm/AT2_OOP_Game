@@ -4,6 +4,9 @@ from assets import GAME_ASSETS
 from enemy import Enemy
 from healthbar import Healthbar
 from character import Character
+from warrior import Warrior
+from rogue import Rogue
+from mage import Mage
 
 class Map:
     def __init__(self, window, map_type):
@@ -25,6 +28,8 @@ class Map:
         self.current_enemy = None
         self.player_character = None  # Character instance
         self.healthbar = None  # Healthbar instance
+        self.selected_skill = 0
+        self.skills = []
 
         if self.map_type == 'grass_map':
             self.enemies = [
@@ -49,8 +54,19 @@ class Map:
         self.player_type = character_type
         self.player_image = self.player_images[character_type]
         self.player_image = pygame.transform.scale(self.player_image, (int(self.player_image.get_width() * 2), int(self.player_image.get_height() * 2)))
-        self.player_character = Character(self.player_type, self.player_type, 5)  # Example: armour value of 5
+        
+        # Initialise the correct subclass based on player_type
+        if character_type == 'Warrior':
+            self.player_character = Warrior('Player', 100)  # Example values
+        elif character_type == 'Mage':
+            self.player_character = Mage('Player', 100)  
+        elif character_type == 'Rogue':
+            self.player_character = Rogue('Player', 100)  
+
         self.healthbar = Healthbar(self.player_character, self.window)
+        self.skills = list(self.player_character.attacks.keys()) if hasattr(self.player_character, 'attacks') else []
+
+        
 
     def check_for_combat(self):
         for enemy in self.enemies:
@@ -81,6 +97,7 @@ class Map:
                 if not self.player_character.is_alive():
                     print("Player has been defeated!")
                     self.game_over = True
+    
 
     def spawn_blue_orb(self):
         self.blue_orb = pygame.image.load(GAME_ASSETS["blue_orb"]).convert_alpha()
@@ -131,3 +148,5 @@ class Map:
         if self.healthbar:
             self.healthbar.display(self.window)
         pygame.display.flip()
+    
+    
