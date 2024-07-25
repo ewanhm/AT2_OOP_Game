@@ -101,7 +101,7 @@ class Map:
             return 'quit'
 
         keys = pygame.key.get_pressed()
-        move_speed = 3
+        move_speed = 0.6
         if keys[pygame.K_LEFT]:
             self.player_position[0] -= move_speed
         if keys[pygame.K_RIGHT]:
