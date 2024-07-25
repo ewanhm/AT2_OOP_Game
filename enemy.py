@@ -7,7 +7,7 @@ class Enemy:
         self.image = pygame.image.load(image_path).convert_alpha()
         
         # Scale the enemy image to 0.75 times the original size
-        self.image = pygame.transform.scale(self.image, (int(self.image.get_width() * 0.75), int(self.image.get_height() * 0.75)))
+        self.image = pygame.transform.scale(self.image, (int(self.image.get_width() * 2), int(self.image.get_height() * 2)))
         
         # Set the initial position of the enemy
         self.position = position

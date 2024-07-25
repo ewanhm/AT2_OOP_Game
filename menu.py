@@ -11,6 +11,24 @@ class MainMenu:
         # Scale the background image to match the window size
         self.scaled_background = pygame.transform.scale(self.background_image, (self.window.get_width(), self.window.get_height()))
 
+    def draw_text_with_border(self, text, font, position, colour, border_colour, border_width):
+        """Draw text with a border effect."""
+        # Render the border text first
+        border_text = font.render(text, True, border_colour)
+        border_rect = border_text.get_rect(center=position)
+        # Render the main text on top
+        main_text = font.render(text, True, colour)
+        main_rect = main_text.get_rect(center=position)
+
+        # Draw the border text multiple times around the main text
+        for x_offset in (-border_width, 0, border_width):
+            for y_offset in (-border_width, 0, border_width):
+                if x_offset != 0 or y_offset != 0:
+                    self.window.blit(border_text, border_rect.move(x_offset, y_offset))
+
+        # Draw the main text
+        self.window.blit(main_text, main_rect)
+
     def run(self):
         """Handles the display and interaction logic for the main menu."""
         running = True
@@ -18,14 +36,14 @@ class MainMenu:
             # Blit the scaled background image to fill the entire window
             self.window.blit(self.scaled_background, (0, 0))
 
-            # Display each menu option on the screen
+            # Display each menu option on the screen with border
             for index, option in enumerate(self.menu_options):
                 # Highlight the selected option in red
-                color = (255, 0, 0) if index == self.selected_option else (255, 255, 255)
-                text = self.font.render(option, True, color)
-                # Adjust the positioning of the text to be centered horizontally and slightly offset vertically
-                text_rect = text.get_rect(center=(self.window.get_width() / 2, 150 + 50 * index))
-                self.window.blit(text, text_rect)
+                colour = (255, 0, 0) if index == self.selected_option else (255, 255, 255)
+                border_colour = (0, 0, 0)  # Black border
+                border_width = 2  # Border width
+                text_position = (self.window.get_width() / 2, 400 + 50 * index)
+                self.draw_text_with_border(option, self.font, text_position, colour, border_colour, border_width)
 
             pygame.display.flip()  # Update the display with the new frame
 
