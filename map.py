@@ -48,7 +48,7 @@ class Map:
         elif self.map_type == 'dungeon_map':
             # Example enemies for dungeon, adjust as needed
             self.enemies = [
-                Enemy(GAME_ASSETS["orc"], [self.window.get_width() / 2, self.window.get_height() / 2], self.window),
+                Enemy(GAME_ASSETS["orc"], [self.window.get_width() - 120, 50], self.window),
                 Enemy(GAME_ASSETS["skeleton"], [self.window.get_width() / 4, self.window.get_height() / 4], self.window)
             ]
 
